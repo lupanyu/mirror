@@ -1,0 +1,6 @@
+
+root: "/root/test1/"
+auth: "gfhuewoiqr3129403nvm0x"
+auto: True
+host: "0.0.0.0"
+post: 123
