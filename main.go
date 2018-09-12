@@ -12,12 +12,19 @@ func main() {
     iplist := lib.Ip()
 	if remote(iplist,host) {
 		//如果本机ip列表中和 配置中匹配 开启服务端
-		buff ,err := lib.Server(conf.Host+string(conf.Port))
+		server ,err := lib.Open(conf.Host+string(conf.Port))
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(buff)
+		fmt.Println(server)
+		lib.Server()
 	}else{
-		//
+		//开启客户端服务
+		client,err := lib.Open(conf.Host+string(conf.Port))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(client)
+		lib.Client()
 	}
     }

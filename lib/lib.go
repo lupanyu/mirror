@@ -7,13 +7,15 @@ import (
 	"fmt"
 	"github.com/kylelemons/go-gypsy/yaml"
 	"log"
+	"io/ioutil"
+	"os"
 )
 
 /**传输文件过程
 1、先验证token         返回 True/Flase
 2、client发送文件信息
 3、server验证是否一致  返回 True/Flase    提取文件路径和名
-4、客户端传文件开始    发送1
+4、客户端传文件开始    发送1   /如果返回Flase
 5、客户端传内容        发送D
 6、客户端传结束标志    发送0
 7、服务端保存文件      发送True
@@ -69,21 +71,44 @@ func Ip() []string{
 	net.Conn 实现了io.Reader  io.Writer  io.Closer接口
 	Open 返回一个有超时的TCP链接缓冲readwrite
  */
-func Server(addr string)(*bufio.ReadWriter,error){
+func Open(addr string)(*bufio.ReadWriter,error){
 	conn,err := net.Dial("tcp",addr)
+	//开启监听
 	if err != nil {
 		return nil, err
 	}
 	return bufio.NewReadWriter(bufio.NewReader(conn),bufio.NewWriter(conn)), nil
+	//返回一个io缓冲器
 }
 //解析交互数据
-func HandleGob(rw *bufio.ReadWriter){
+func HandleGob(rw *bufio.ReadWriter) ( ComplexData,error){
 	var data ComplexData
 	dec := gob.NewDecoder(rw)
 	err := dec.Decode(&data)
+
 	if err != nil {
 		fmt.Println("无法解析的数据.")
-		return
+		return data,err
 	}
-	fmt.Println("-------------\n",data,data.C)
+	return data,nil
+}
+
+func Write(filename string,bufdata []byte,pem os.FileMode ) int{
+	err :=ioutil.WriteFile(filename,bufdata,pem)
+	if err !=nil {
+		return 0
+	}else {
+		return 1
+	}
+}
+func Server(data ComplexData){
+
+	switch HandleGob(data) {
+
+	}
+
+}
+
+func Client(){
+
 }
