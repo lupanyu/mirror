@@ -18,8 +18,6 @@ type X interface {
 }
 
 func main(){
-	b := 1
-	a := art{}
+	fmt.Println( reflect.TypeOf(1))
 
-	fmt.Println( reflect.TypeOf(a))
 }
